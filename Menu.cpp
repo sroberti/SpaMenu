@@ -38,3 +38,17 @@ void Menu::displayUntilValid(std::function<void ()> _invalidInputEvent)
       std::cin >> userResponse;
     }
 }
+
+bool Menu::matchResponse(const std::string& _response) const
+{
+  bool valid = false;
+  for_each(options.begin(), options.end(), [&] (Option op)
+           {
+             if(op.entry == _response)
+               {
+                 op.action();
+                 valid = true;
+               }
+           });
+  return valid;
+}

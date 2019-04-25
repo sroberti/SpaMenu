@@ -8,12 +8,14 @@
 
 class Menu
 {
-private:
-  struct Option {
+public:
+  struct Option
+  {
     std::string entry;
     std::string description;
     std::function<void ()> action;
   };
+private:
 
   std::vector<Option> options;
   std::function<void (const std::string&, const std:: string&)> displayOption;
@@ -22,6 +24,7 @@ private:
   bool matchResponse(const std::string&) const;
 
 public:
+
   Menu(std::initializer_list<Option>, std::function<void (const std::string&, const std:: string&)> _displayFormat = [] (const std::string& a, const std::string& b) {defaultOptionOutput(a, b);});
   void display(std::function<void ()> _invalidInputEvent = [] (){defaultInvalidInputResponse();});
   void displayUntilValid(std::function<void ()> _invalidInputEvent = [] (){defaultInvalidInputResponse();});
