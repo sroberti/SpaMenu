@@ -21,7 +21,8 @@ private:
   std::function<void (const std::string&, const std:: string&)> displayOption;
   static void defaultOptionOutput(const std::string&, const std::string&);
   static void defaultInvalidInputResponse();
-  bool matchResponse(const std::string&) const;
+  void matchResponse(const std::string&) const;
+  bool isValidResponse(const std::string&) const;
 
 public:
 

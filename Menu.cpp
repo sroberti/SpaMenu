@@ -22,33 +22,25 @@ void Menu::display(std::function<void ()> _invalidInputEvent)
   for_each(options.begin(), options.end(), [this] (Option& line) {displayOption(line.entry, line.description);});
   std::string userResponse;
   std::cin >> userResponse;
-  if(!matchResponse(userResponse)) _invalidInputEvent();
+  if(isValidResponse(userResponse)) matchResponse(userResponse);
+  else _invalidInputEvent();
 }
 
 void Menu::displayUntilValid(std::function<void ()> _invalidInputEvent)
 {
-  for_each(options.begin(), options.end(), [this] (Option& line) {displayOption(line.entry, line.description);});
-  std::string userResponse;
-  std::cin >> userResponse;
-
-  while(!matchResponse(userResponse))
-    {
-      _invalidInputEvent();
-      for_each(options.begin(), options.end(), [this] (Option& line) {displayOption(line.entry, line.description);});
-      std::cin >> userResponse;
-    }
+  display([&]()
+          {
+            _invalidInputEvent();
+            displayUntilValid(_invalidInputEvent);
+          });
 }
 
-bool Menu::matchResponse(const std::string& _response) const
+void Menu::matchResponse(const std::string& _response) const
 {
-  bool valid = false;
-  for_each(options.begin(), options.end(), [&] (Option op)
-           {
-             if(op.entry == _response)
-               {
-                 op.action();
-                 valid = true;
-               }
-           });
-  return valid;
+  find_if(options.begin(), options.end(), [&](Option op) {return op.entry == _response;})->action();
+}
+
+bool Menu::isValidResponse(const std::string& _response) const
+{
+  return any_of(options.begin(), options.end(), [&](Option op) {return op.entry == _response;});
 }
